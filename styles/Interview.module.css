@@ -1,0 +1,25 @@
+.interview-main-container {
+  font-weight: 700;
+  color: var(--base-secondary-400);
+  display: grid;
+  place-items: center;
+  height: 100vh;
+}
+
+.interview-boxes-container{
+  display: inline-flex;
+  gap: 30px
+}
+
+.interview-box-container{
+  display: block;
+  gap: 30px;
+}
+
+@media screen and (max-width: 700px) {
+  .interview-main-container {
+    display: flex;
+    justify-content: center;
+  }
+}
+

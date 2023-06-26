@@ -1,0 +1,43 @@
+.card {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e2e2;
+  gap: 10px;
+}
+
+.link {
+  display: block;
+  cursor: pointer;
+  font-family: 'Poppins';
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--texr-default-400);
+}
+
+.link:hover {
+  color: var(--text-default-400);
+  text-decoration: underline;
+}
+
+.empty-accounts {
+  display: flex;
+  gap: 4px;
+}
+
+.empty-accounts h6 {
+  font-size: 10px;
+}
+
+.add-button-text {
+  color: var(--texr-default-400);
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  margin-top: 4px;
+  text-align: center;
+}
