@@ -3,5 +3,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    text-align: center;
+}
+
+.squares-box-container {
+    cursor: pointer;
+    margin-top: 1rem;
 }

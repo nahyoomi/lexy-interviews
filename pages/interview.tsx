@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import AccountCard from "@/components/accountCard/AccountCard";
 import { useState } from "react";
 import Square from "@/components/square/Square";
+import { squares } from "@/data/squaresData";
 
 type IPlatform = "facebook" | "instagram" | "linkedin";
 
@@ -17,12 +18,6 @@ interface IProfile {
   username: string;
   tastes: any;
 }
-
-const squares = [
-  { id: 1, color: "secondary" },
-  { id: 2, color: "primary" },
-  { id: 3, color: "success" },
-]
 
 const Interview = ({ props }) => {
   const [ boxes, setBoxes ] = useState(squares);
@@ -90,7 +85,7 @@ const Interview = ({ props }) => {
       <div className={styles["interview-boxes-container"]}>
         {boxes.map((box) =>(
           <div className={styles["interview-box-container"]} key={box.id}>
-            <Square color={box.color} />
+            <Square color={box.color} effect={true} />
             <Button
               variant="contained"
               startIcon={<CloseIcon />}
