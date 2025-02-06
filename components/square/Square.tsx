@@ -5,8 +5,6 @@ interface ISquare {
     color: string;
 }
 
-
-
 const Square: React.FC<ISquare> = ({ color }) => {
     return (
         <Box

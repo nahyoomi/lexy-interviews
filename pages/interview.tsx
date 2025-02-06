@@ -6,7 +6,7 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import AccountCard from "@/components/accountCard/AccountCard";
 import { useState } from "react";
-import Square from "@/components/square";
+import Square from "@/components/square/Square";
 
 type IPlatform = "facebook" | "instagram" | "linkedin";
 
