@@ -42,7 +42,7 @@ const AccountCard: React.FC<IAccountCard> = ({
     <Card>
       <div className={styles["card"]}>
         {integrations.map((item, index) => (
-          <Button key='k1' onClick={() => setIsProfileModalOpen(true)}>
+          <Button key={item.id} onClick={() => setIsProfileModalOpen(true)}>
             <Avatar alt={item.username} src={item.avatar} />
             {item.username}
           </Button>
