@@ -1,20 +1,25 @@
+import { Box } from "@mui/material";
 import React from "react";
 
 interface ISquare {
     color: string;
-    onDelete:() => void;
 }
 
-const Square: React.FC<ISquare> = ({ color, onDelete }) => {
+
+
+const Square: React.FC<ISquare> = ({ color }) => {
     return (
-        <div
-            style={{
-                width: "100px",
-                height: "100px",
-                backgroundColor: color,
+        <Box
+            sx={{
+              width: 300,
+              height: 300,
+              backgroundColor:`${color}.dark`,
+              "&:hover": {
+                backgroundColor: `${color}.main`,
+                opacity: [0.9, 0.8, 0.7],
+              },
             }}
-            onClick={onDelete}
-        />
+          />
     );
 };
 

@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import AccountCard from "@/components/accountCard/AccountCard";
 import { useState } from "react";
+import Square from "@/components/square";
 
 type IPlatform = "facebook" | "instagram" | "linkedin";
 
@@ -17,7 +18,19 @@ interface IProfile {
   tastes: any;
 }
 
+const squares = [
+  { id: 1, color: "secondary" },
+  { id: 2, color: "primary" },
+  { id: 3, color: "success" },
+]
+
 const Interview = ({ props }) => {
+  const [ boxes, setBoxes ] = useState(squares);
+
+  const handleDelete = (id: number) => {
+    setBoxes(prev => prev.filter(square => square.id !== id));
+  }
+  
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -75,54 +88,18 @@ const Interview = ({ props }) => {
   return (
     <div className={styles["interview-main-container"]}>
       <div className={styles["interview-boxes-container"]}>
-        <div className={styles["interview-box-container"]}>
-          <Box
-            sx={{
-              width: 300,
-              height: 300,
-              backgroundColor: "secondary.dark",
-              "&:hover": {
-                backgroundColor: "secondary.main",
-                opacity: [0.9, 0.8, 0.7],
-              },
-            }}
-          />
-          <Button variant="contained" startIcon={<CloseIcon />}>
-            Delete
-          </Button>
-        </div>
-        <div className={styles["interview-box-container"]}>
-          <Box
-            sx={{
-              width: 300,
-              height: 300,
-              backgroundColor: "primary.dark",
-              "&:hover": {
-                backgroundColor: "primary.main",
-                opacity: [0.9, 0.8, 0.7],
-              },
-            }}
-          />
-          <Button variant="contained" startIcon={<CloseIcon />}>
-            Delete
-          </Button>
-        </div>
-        <div className={styles["interview-box-container"]}>
-          <Box
-            sx={{
-              width: 300,
-              height: 300,
-              backgroundColor: "success.dark",
-              "&:hover": {
-                backgroundColor: "success.main",
-                opacity: [0.9, 0.8, 0.7],
-              },
-            }}
-          />
-          <Button variant="contained" startIcon={<CloseIcon />}>
-            Delete
-          </Button>
-        </div>
+        {boxes.map((box) =>(
+          <div className={styles["interview-box-container"]} key={box.id}>
+            <Square color={box.color} />
+            <Button
+              variant="contained"
+              startIcon={<CloseIcon />}
+              onClick={() => handleDelete(box.id)}
+            >
+              Delete
+            </Button>
+          </div>
+        ))}
       </div>
       <div>
         <AccountCard
