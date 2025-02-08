@@ -9,6 +9,8 @@ import styles from "./AccountCard.module.css";
 
 import { ITaste, IProfile } from "@/data/profileData";
 import NewProfileModal from "@/components/modals/NewProfileModal";
+import { toast } from "react-toastify";
+
 
 
 export interface IAccountCard {
@@ -85,7 +87,7 @@ const AccountCard: React.FC<IAccountCard> = ({
       return
     }
     setIntegrations(prev => [...prev, newProfile]);
-    alert("Perfil creado con éxito");
+    toast("Perfil creado con éxito");
     setIsModalOpen(false);
     setNewProfile({ id: "", avatar: "", platform: "facebook", username: "", tastes: [] });
   };

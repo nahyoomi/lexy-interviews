@@ -7,6 +7,8 @@ import Square from "@/components/square/Square";
 import { squares } from "@/data/squaresData";
 import { IProfile, profile1, profile2  } from "@/data/profileData";
 import ProfileModal from "@/components/modals/ProfileModal";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const Interview = () => {
@@ -22,6 +24,7 @@ const Interview = () => {
 
   return (
     <div className={styles["interview-main-container"]}>
+      <ToastContainer />
       <div className={styles["interview-boxes-container"]}>
         {boxes.map((box) =>(
           <div className={styles["interview-box-container"]} key={box.id}>
