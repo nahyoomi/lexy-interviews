@@ -30,7 +30,6 @@ const AccountCard: React.FC<IAccountCard> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [integrations, setIntegrations] = useState<IProfile[]>([]);
-    // Estado para el nuevo perfil
   const [newProfile, setNewProfile] = useState<IProfile>({
     id: "",
     avatar: "",
@@ -40,6 +39,7 @@ const AccountCard: React.FC<IAccountCard> = ({
   });
 
   const [newTaste, setNewtaste] = useState({title: "", elements: ""});
+  const [showTastes, setShowTastes] = useState(false);
   const stylesModal = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -78,6 +78,7 @@ const AccountCard: React.FC<IAccountCard> = ({
     };
     setNewProfile(prev => ({ ...prev, tastes: [...prev.tastes, tasteObj] }));
     setNewtaste({ title: "", elements: "" });
+    setShowTastes(false);
   }
 
 
@@ -87,9 +88,13 @@ const AccountCard: React.FC<IAccountCard> = ({
       alert("El ID ya existe");
       return;
     }
-    if (!newProfile.id || !newProfile.username || !newProfile.platform || !newProfile.avatar || newProfile.tastes.length === 0) {
-      alert("Por favor llena todos los campos son requeridos");
+    if (!newProfile.id || !newProfile.username || !newProfile.platform || !newProfile.avatar) {
+      
+      alert("Por favor llena todos los campos requeridos (ID, username, platform, avatar.");
       return;
+    }else if(newProfile.tastes.length === 0){
+      alert("Por favor agrega al menos un gusto.");
+      return
     }
     setIntegrations(prev => [...prev, newProfile]);
     alert("Perfil creado con éxito");
@@ -116,7 +121,11 @@ const AccountCard: React.FC<IAccountCard> = ({
         )}
         {!editable && (
           <div className={styles["empty-accounts"]}>
-            <Button onClick={()=>setIsModalOpen(true)}>
+            <Button onClick={()=>{
+              setIsModalOpen(true);
+              setNewProfile({ id: "", avatar: "", platform: "facebook", username: "", tastes: [] });
+              setShowTastes(false);
+            }}>
               <span className={styles["link"]}>Add a new Profile</span>
             </Button>
           </div>
@@ -154,23 +163,33 @@ const AccountCard: React.FC<IAccountCard> = ({
             fullWidth
             margin="normal"
           />
-          <Button variant="outlined" onClick={handleAddTaste} sx={{ mt: 1, mb: 2 }}>
-            Add Taste
-          </Button>
-          <TextField
-            label="Taste Title"
-            value={newTaste.title}
-            onChange={(e) =>setNewtaste((prev) => ({ ...prev, title: e.target.value }))}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Taste Elements (separated by commas)"
-            value={newTaste.elements}
-            onChange={(e) =>setNewtaste((prev) => ({ ...prev, elements: e.target.value }))}
-            fullWidth
-            margin="normal"
-          />
+          <div>
+            <Button variant="outlined" onClick={()=> {setShowTastes(!showTastes)}} sx={{ mt: 2, mb: 2 }}>
+             {showTastes ? "Hide tastes" : "Add taste"} 
+            </Button>
+          </div>
+
+          {showTastes && (
+            <div style={{margin: "20px"}}>
+              <TextField
+                label="Title"
+                value={newTaste.title}
+                onChange={(e) => setNewtaste({ ...newTaste, title: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Elements"
+                value={newTaste.elements}
+                onChange={(e) => setNewtaste({ ...newTaste, elements: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+              <Button variant="outlined" onClick={handleAddTaste} sx={{ mt: 1, mb: 2 }}>
+                Save taste
+              </Button>
+            </div>
+          )}
           {newProfile.tastes.length > 0 && (
             <List>
               {newProfile.tastes.map((taste, index) => (
@@ -185,7 +204,7 @@ const AccountCard: React.FC<IAccountCard> = ({
           )
 
           }
-          <Button variant="contained" onClick={handleAddProfile}>
+          <Button variant="contained" fullWidth onClick={handleAddProfile}>
             Guardar
           </Button>
         </Box>
