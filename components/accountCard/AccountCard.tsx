@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 
-import { Box, Card, List, ListItem, ListItemText, Modal, TextField } from "@mui/material";
+import { Card } from "@mui/material";
 
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 
 import styles from "./AccountCard.module.css";
-import Link from "next/link";
 
-import { ITaste, IProfile } from "@/pages/interview";
-
-type IPlatform = "facebook" | "instagram" | "linkedin";
+import { ITaste, IProfile } from "@/data/profileData";
+import NewProfileModal from "@/components/modals/NewProfileModal";
 
 
 export interface IAccountCard {
@@ -30,6 +28,7 @@ const AccountCard: React.FC<IAccountCard> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [integrations, setIntegrations] = useState<IProfile[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const [newProfile, setNewProfile] = useState<IProfile>({
     id: "",
     avatar: "",
@@ -37,20 +36,8 @@ const AccountCard: React.FC<IAccountCard> = ({
     username: "",
     tastes: [],
   });
-
-  const [newTaste, setNewtaste] = useState({title: "", elements: ""});
+  const [newTaste, setNewTaste] = useState({title: "", elements: ""});
   const [showTastes, setShowTastes] = useState(false);
-  const stylesModal = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
 
 
   useEffect(() => {
@@ -69,7 +56,7 @@ const AccountCard: React.FC<IAccountCard> = ({
 
   const handleAddTaste = () => {
     if(!newTaste.title || !newTaste.elements){
-      alert("Por favor llena todos los campos requeridos (title y elements).");
+      setErrorMessage("Por favor, llena todos los campos de gustos requeridos.");
       return;
     }
     const tasteObj: ITaste = {
@@ -77,23 +64,24 @@ const AccountCard: React.FC<IAccountCard> = ({
       elements: newTaste.elements.split(",").map((element) => element.trim()),
     };
     setNewProfile(prev => ({ ...prev, tastes: [...prev.tastes, tasteObj] }));
-    setNewtaste({ title: "", elements: "" });
+    setNewTaste({ title: "", elements: "" });
     setShowTastes(false);
+    setErrorMessage("");
   }
 
 
   const handleAddProfile = () => {
     const checkId = integrations.find((profile) => profile.id === newProfile.id);
     if (checkId) {
-      alert("El ID ya existe");
+      setErrorMessage("El ID ya existe");
       return;
     }
     if (!newProfile.id || !newProfile.username || !newProfile.platform || !newProfile.avatar) {
       
-      alert("Por favor llena todos los campos requeridos (ID, username, platform, avatar.");
+      setErrorMessage("Por favor, llena todos los campos requeridos.");
       return;
     }else if(newProfile.tastes.length === 0){
-      alert("Por favor agrega al menos un gusto.");
+      setErrorMessage("Por favor, agrega al menos un gusto.");
       return
     }
     setIntegrations(prev => [...prev, newProfile]);
@@ -107,24 +95,24 @@ const AccountCard: React.FC<IAccountCard> = ({
   return (
     <Card>
       <div className={styles["card"]}>
-        {integrations.map((item) => (
-          <Button key={item.id} onClick={() => handleProfileDetails(item)}>
+        {integrations.map((item, index) => (
+          <Button key={`${newProfile.id}-${index}`} onClick={() => handleProfileDetails(item)}>
             <Avatar alt={item.username} src={item.avatar} />
             {item.username}
           </Button>
         ))}
-        {editable && (
+        {editable ? (
           <div>
             <Button onClick={() => setIsModalOpen(true)} />
             <div className={styles["add-button-text"]}>Add</div>
           </div>
-        )}
-        {!editable && (
+        ) : (
           <div className={styles["empty-accounts"]}>
-            <Button onClick={()=>{
+            <Button onClick={() => {
               setIsModalOpen(true);
               setNewProfile({ id: "", avatar: "", platform: "facebook", username: "", tastes: [] });
               setShowTastes(false);
+              setErrorMessage("");
             }}>
               <span className={styles["link"]}>Add a new Profile</span>
             </Button>
@@ -132,83 +120,19 @@ const AccountCard: React.FC<IAccountCard> = ({
         )}
       </div>
       
-      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <Box sx={{ ...stylesModal }}>
-          <h2>Añadir nuevo perfil</h2>
-          <TextField
-            label="ID"
-            value={newProfile.id}
-            onChange={(e) => handleNewProfileChange("id", e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Username"
-            value={newProfile.username}
-            onChange={(e) => handleNewProfileChange("username", e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Avatar URL"
-            value={newProfile.avatar}
-            onChange={(e) => handleNewProfileChange("avatar", e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Platform"
-            value={newProfile.platform}
-            onChange={(e) => handleNewProfileChange("platform", e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <div>
-            <Button variant="outlined" onClick={()=> {setShowTastes(!showTastes)}} sx={{ mt: 2, mb: 2 }}>
-             {showTastes ? "Hide tastes" : "Add taste"} 
-            </Button>
-          </div>
-
-          {showTastes && (
-            <div style={{margin: "20px"}}>
-              <TextField
-                label="Title"
-                value={newTaste.title}
-                onChange={(e) => setNewtaste({ ...newTaste, title: e.target.value })}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Elements"
-                value={newTaste.elements}
-                onChange={(e) => setNewtaste({ ...newTaste, elements: e.target.value })}
-                fullWidth
-                margin="normal"
-              />
-              <Button variant="outlined" onClick={handleAddTaste} sx={{ mt: 1, mb: 2 }}>
-                Save taste
-              </Button>
-            </div>
-          )}
-          {newProfile.tastes.length > 0 && (
-            <List>
-              {newProfile.tastes.map((taste, index) => (
-                <ListItem key={`${newProfile.id}-${index}`}>
-                <ListItemText
-                  primary={taste.title}
-                  secondary={taste.elements.join(", ")}
-                />
-              </ListItem>
-              ))}
-            </List>
-          )
-
-          }
-          <Button variant="contained" fullWidth onClick={handleAddProfile}>
-            Guardar
-          </Button>
-        </Box>
-      </Modal>
+      <NewProfileModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        newProfile={newProfile}
+        handleNewProfileChange={handleNewProfileChange}
+        newTaste={newTaste}
+        setNewTaste={setNewTaste}
+        showTastes={showTastes}
+        setShowTastes={setShowTastes}
+        handleAddTaste={handleAddTaste}
+        handleAddProfile={handleAddProfile}
+        errorMessage={errorMessage}
+      />
     </Card>
   );
 };
